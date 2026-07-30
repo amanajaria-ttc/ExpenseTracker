@@ -1,0 +1,28 @@
+
+.container mt-4{
+    justify-content: center;
+}
+.AddExpense{
+    border: 1px solid #4b3939;
+    background-color: #bbe2d9;
+}
+.navbar{
+    background-color: #4b3939;
+}
+body{
+    background-color: #ccc8ff;
+}
+.navbar-brand{
+    font-style: italic;
+    font-weight: bold;
+}
+label{
+    font-weight: bold;
+    font-size: 18px;
+    font-family: 'Courier New', Courier, monospace;
+}
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ced4da;
+}

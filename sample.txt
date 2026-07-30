@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EXPENSE TRACKER</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="logic.js"></script>
+
+</head>
+
+<body>
+
+
+    <!--==================== navigation bar -============-> -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand">EXPENSE TRACKER</a>
+        </div>
+    </nav> 
+
+
+
+    <!-- ===============DASHBOARD=================== -->
+    <div class="container mt-4">
+        <h1>DASHBOARD</h1>
+
+        <div class="row g-4 mb-4">
+
+            <div class="col-lg-2 col-md-4">
+                <div class="card-body text-center">
+                    <h6>Total Expense</h6>
+                    <h3 id="totalExpense">₹0</h3>
+                </div>
+            </div>
+
+           <div class="col-lg-2 col-md-4">
+                <div class="card-body text-center">
+                    <h6>Average Expense</h6>
+                    <h3 id="avgExpense">₹0</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4">
+                <div class="card-body text-center">
+                    <h6>Highest Expense</h6>
+                    <h3 id="highestExpense">₹0</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4">
+                <div class="card-body text-center">
+                    <h6>This Month</h6>
+                    <h3 id="thisMonth">₹0</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4">
+                <div class="card-body text-center">
+                    <h6>Total Entries</h6>
+                    <h3 id="totalEntries">0</h3>
+                </div>
+            </div>
+
+
+    </div>
+
+
+    <!-- ADD EXPENSE BLOCK -->
+
+    <div class="AddExpense">
+        <label for="expenseForm" class="form-label"> <h3>Add Expense</h3></label>
+        <form id="expenseForm">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label >Expense Name</label>
+                    <input type="text" class="form-control" id="expenseName" placeholder="Expense Name" required>
+                </div>
+                <div class="col-md-4">
+                    <label >Expense Amount</label>
+                    <input type="number" class="form-control" id="expenseAmount" placeholder="Expense Amount" required>
+                </div>
+                <div class="col-md-4">
+                    <label >Expense Date</label>
+                    <input type="date" class="form-control" id="expenseDate" required>
+                </div>
+                <div class="col-lg-4">
+
+                        <select
+                            id="filterCategory"
+                            class="form-select">
+
+                            <option value="All">
+
+                                All Categories
+
+                            </option>
+
+                            <option value="Food">Food</option>
+
+                            <option value="Travel">Travel</option>
+
+                            <option value="Shopping">Shopping</option>
+
+                            <option value="Bills">Bills</option>
+
+                            <option value="Entertainment">Entertainment</option>
+
+                            <option value="Health">Health</option>
+
+                            <option value="Education">Education</option>
+
+                            <option value="Other">Other</option>
+
+                        </select>
+                </div>    
+
+
+                <div class="col-12 text-end center">
+                    <button type="submit" class="btn btn-primary">
+                        Add Expense
+                    </button>
+                </div>
+            </div>
+        </form>    
+        
+    </div>
+
+
+
+       
+    <!-- EXPENSE HISTORY -->
+
+
+    <div class="card">
+
+        <div class="card-header bg-success text-pink">
+
+            <h4 class="mb-0 text-blue">
+
+                Expense History
+
+            </h4>
+
+        </div>
+        <!-- SEARCH AND SORT FEATURES -->
+        <div class="card header bg-light">
+            <!-- SEARCHing -->
+            <div class="col-lg-3">
+
+                <input
+                    type="text"
+                    id="searchExpense"
+                    class="form-control"
+                    placeholder="Search by category or description">
+            </div>
+            <div class="col-lg-3">
+            <!-- SORTING -->
+                <select
+                    id="sortExpense"
+                    class="form-select">
+                    <option value="default">
+                        Sort Expenses
+
+                    </option>
+
+                    <option value="low">
+
+                        Amount Low → High
+                    </option>
+                    <option value="high">
+
+                        Amount High → Low
+
+                    </option>
+
+                    <option value="new">
+
+                        Newest First
+
+                    </option>
+
+                    <option value="old">
+
+                        Oldest First
+                    </option>
+
+                </select>
+            </div>
+                
+
+        </div>
+        <!-- TABLE -->
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered align-middle">
+
+                    <thead class="table-success">
+
+                        <tr>
+
+                            <th>Date</th>
+
+                            <th>Category</th>
+
+                            <th>Amount</th>
+
+                            <th>Payment</th>
+
+                            <th>Name</th>
+
+                            <th width="170">
+
+                                Action
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="expenseTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    
+</body>
+</html>
+
+
+ $("#searchExpense").keyup(function () {
+
+        let value = $(this).val().toLowerCase();
+
+        $("#expenseTable tr").filter(function () {
+
+            $(this).toggle(
+
+                $(this).text().toLowerCase().indexOf(value) > -1
+
+            );
+
+        });
+
+    });
+
+
+    // ================= SORT =================
+
+    $("#sortExpense").change(function () {
+
+        let option = $(this).val();
+
+        if (option == "low") {
+
+            expenses.sort(function (a, b) {
+
+                return a.amount - b.amount;
+
+            });
+
+        }
+
+        else if (option == "high") {
+
+            expenses.sort(function (a, b) {
+
+                return b.amount - a.amount;
+
+            });
+
+        }
+
+        else if (option == "new") {
+
+            expenses.sort(function (a, b) {
+
+                return new Date(b.date) - new Date(a.date);
+
+            });
+
+        }
+
+        else if (option == "old") {
+
+            expenses.sort(function (a, b) {
+
+                return new Date(a.date) - new Date(b.date);
+
+            });
+
+        }
+
+        saveData();
+
+    });
+// CORE
+$(document).ready(function () {
+
+    let expenses = [];
+    let editIndex = -1;
+
+    $("#expenseForm").submit(function (para) {
+        para.preventDefault();
+
+        let name = $("#expenseName").val();
+        let amount = $("#expenseAmount").val();
+        let date = $("#expenseDate").val();
+        let category = $("#expenseCategory").val();
+        let payment = $("#paymentMethod").val();
+        // adding 
+        if (editIndex == -1) {
+
+            expenses.push({
+                name: name,
+                amount: amount,
+                date: date,
+                category: category,
+                payment: payment
+            });
+        // updating
+        } else {
+
+            expenses[editIndex].name = name;
+            expenses[editIndex].amount = amount;
+            expenses[editIndex].date = date;
+            expenses[editIndex].category = category;
+            expenses[editIndex].payment = payment;
+
+            editIndex = -1;
+            $("button[type='submit']").text("Add Expense");
+        }
+
+        displayExpenses();
+
+        $("#expenseForm")[0].reset();
+    });
+
+
+    // DISPLAY EXPENSES hero 
+function displayExpenses() {
+
+    $("#expenseTable").html("");
+
+    let total = 0;
+    let highest = 0;
+    let monthTotal = 0;
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    for (let i = 0; i < expenses.length; i++) {
+
+        total = total + Number(expenses[i].amount);
+
+        // Highest Expense
+        if (Number(expenses[i].amount) > highest) {
+            highest = Number(expenses[i].amount);
+        }
+
+        // This Month Expense
+        let d = new Date(expenses[i].date);
+
+        if (d.getMonth() == currentMonth &&
+            d.getFullYear() == currentYear) {
+
+            monthTotal = monthTotal + Number(expenses[i].amount);
+        }
+
+        $("#expenseTable").append(`
+            <tr>
+                <td>${expenses[i].date}</td>
+                <td>${expenses[i].category}</td>
+                <td>₹${expenses[i].amount}</td>
+                <td>${expenses[i].payment}</td>
+                <td>${expenses[i].name}</td>
+                <td>
+                    <button class="editBtn" data-index="${i}">Edit</button>
+                    <button class="deleteBtn" data-index="${i}">Delete</button>
+                </td>
+            </tr>
+        `);
+    }
+
+    let average = 0;
+
+    if (expenses.length > 0) {
+        average = total / expenses.length;
+    }
+
+    $("#totalExpense").text("₹" + total);
+    $("#avgExpense").text("₹" + average.toFixed(2));
+    $("#highestExpense").text("₹" + highest);
+    $("#thisMonth").text("₹" + monthTotal);
+    $("#totalEntries").text(expenses.length);
+}
+    $(document).on("click", ".deleteBtn", function () {
+
+        let index = $(this).data("index");
+
+        for (let i = index; i < expenses.length - 1; i++) {
+            expenses[i] = expenses[i + 1];
+        }
+
+        expenses.length--;
+
+        displayExpenses();
+    });
+
+    $(document).on("click", ".editBtn", function () {
+
+        let index = $(this).data("index");
+
+        $("#expenseName").val(expenses[index].name);
+        $("#expenseAmount").val(expenses[index].amount);
+        $("#expenseDate").val(expenses[index].date);
+        $("#expenseCategory").val(expenses[index].category);
+        $("#paymentMethod").val(expenses[index].payment);
+
+        editIndex = index;
+
+        $("button[type='submit']").text("Update Expense");
+    });
+
+});
+/////////////
+$(document).ready(function () {
+
+    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+    let editId = null;
+
+    displayExpenses();
+
+    // ================= ADD / UPDATE feature===================================
+
+    $("#expenseForm").submit(function (e) {
+
+        e.preventDefault();
+
+        let expense = {
+
+            id: editId ? editId : Date.now(),
+
+            name: $("#expenseName").val(),
+
+            amount: Number($("#expenseAmount").val()),
+
+            date: $("#expenseDate").val(),
+
+            category: $("#expenseCategory").val(),
+
+            payment: $("#paymentMethod").val()
+
+        };
+
+        if (editId == null) {
+
+            expenses.push(expense);
+
+        }
+
+        else {
+
+            expenses = expenses.map(function (item) {
+
+                if (item.id == editId) {
+
+                    return expense;
+
+                }
+
+                return item;
+
+            });
+
+            editId = null;
+
+            $("button[type='submit']").text("Add Expense");
+
+        }
+
+        saveData();
+
+        $("#expenseForm")[0].reset();
+
+    });
+
+
+    // ================= SAVE =====================================
+
+    function saveData() {
+
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+
+        displayExpenses();
+
+    }
+
+
+    // ================= DISPLAY ==================================================================
+
+    function displayExpenses() {
+
+        $("#expenseTable").html("");
+
+        let total = 0;
+
+        let highest = 0;
+
+        let monthTotal = 0;
+
+        let currentMonth = new Date().getMonth();
+
+        let currentYear = new Date().getFullYear();
+
+        $.each(expenses, function (index, item) {
+
+            total += item.amount;
+
+            if (item.amount > highest) {
+
+                highest = item.amount;
+
+            }
+
+            let d = new Date(item.date);
+
+            if (d.getMonth() == currentMonth &&
+                d.getFullYear() == currentYear) {
+
+                monthTotal += item.amount;
+
+            }
+
+            $("#expenseTable").append(`
+                <tr>
+                    <td>${item.date}</td>
+                    <td>${item.category}</td>
+                    <td>₹${item.amount}</td>
+                    <td>${item.payment}</td>
+                    <td>${item.name}</td>
+
+                    <td>
+
+                        <button class="btn btn-warning btn-sm editBtn"
+                            data-id="${item.id}">
+                            Edit
+                        </button>
+
+                        <button class="btn btn-danger btn-sm deleteBtn"
+                            data-id="${item.id}">
+                            Delete
+                        </button>
+
+                    </td>
+
+                </tr>
+            `);
+
+        });
+
+        let average = 0;
+
+        if (expenses.length > 0) {
+
+            average = total / expenses.length;
+
+        }
+
+        $("#totalExpense").text("₹" + total);
+
+        $("#avgExpense").text("₹" + average.toFixed(2));
+
+        $("#highestExpense").text("₹" + highest);
+
+        $("#thisMonth").text("₹" + monthTotal);
+
+        $("#totalEntries").text(expenses.length);
+
+    }
+
+
+    // ================= DELETE =================
+
+    $(document).on("click", ".deleteBtn", function () {
+
+        let id = $(this).data("id");
+
+        expenses = expenses.filter(function (item) {
+
+            return item.id != id;
+
+        });
+
+        saveData();
+
+    });
+
+
+    // ================= EDIT =================
+
+    $(document).on("click", ".editBtn", function () {
+
+        let id = $(this).data("id");
+
+        let expense = expenses.find(function (item) {
+
+            return item.id == id;
+
+        });
+
+        $("#expenseName").val(expense.name);
+
+        $("#expenseAmount").val(expense.amount);
+
+        $("#expenseDate").val(expense.date);
+
+        $("#expenseCategory").val(expense.category);
+
+        $("#paymentMethod").val(expense.payment);
+
+        editId = id;
+
+        $("button[type='submit']").text("Update Expense");
+
+    });
+
+
+    // ================= SEARCH and Sorting =================
+
+   
+});
+// CORE
+$(document).ready(function () {
+
+    //load from localStorage
+    let expenses = [];
+
+    if (localStorage.getItem("expenses") != null) {
+        expenses = JSON.parse(localStorage.getItem("expenses"));
+    }
+
+    let editIndex = -1;
+
+    // Show saved expenses when page loads
+    displayExpenses();
+
+    // ================= ADD / UPDATE =================
+
+    $("#expenseForm").submit(function (para) {
+
+        para.preventDefault();
+
+        let name = $("#expenseName").val();
+        let amount = $("#expenseAmount").val();
+        let date = $("#expenseDate").val();
+        let category = $("#expenseCategory").val();
+        let payment = $("#paymentMethod").val();
+
+        // Add Expense
+        if (editIndex == -1) {
+
+            expenses.push({
+                name: name,
+                amount: amount,
+                date: date,
+                category: category,
+                payment: payment
+            });
+
+        }
+        // Update Expense
+        else {
+
+            expenses[editIndex].name = name;
+            expenses[editIndex].amount = amount;
+            expenses[editIndex].date = date;
+            expenses[editIndex].category = category;
+            expenses[editIndex].payment = payment;
+
+            editIndex = -1;
+
+            $("button[type='submit']").text("Add Expense");
+        }
+
+        // Save data
+        saveData();
+
+        // Display updated data
+        displayExpenses();
+
+        // Clear form
+        $("#expenseForm")[0].reset();
+
+    });
+
+    // ================= SAVE DATA =================
+
+    function saveData() {
+
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    }
+
+    // ================= DISPLAY =================
+
+    function displayExpenses() {
+
+        $("#expenseTable").html("");
+
+        let total = 0;
+        let highest = 0;
+        let monthTotal = 0;
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        for (let i = 0; i < expenses.length; i++) {
+
+            total = total + Number(expenses[i].amount);
+
+            // Highest Expense
+            if (Number(expenses[i].amount) > highest) {
+                highest = Number(expenses[i].amount);
+            }
+
+            // This Month Expense
+            let d = new Date(expenses[i].date);
+
+            if (d.getMonth() == currentMonth &&
+                d.getFullYear() == currentYear) {
+
+                monthTotal = monthTotal + Number(expenses[i].amount);
+            }
+
+            $("#expenseTable").append(`
+                <tr>
+                    <td>${expenses[i].date}</td>
+                    <td>${expenses[i].category}</td>
+                    <td>₹${expenses[i].amount}</td>
+                    <td>${expenses[i].payment}</td>
+                    <td>${expenses[i].name}</td>
+                    <td>
+                        <button class="editBtn btn btn-warning btn-sm" data-index="${i}">
+                            Edit
+                        </button>
+
+                        <button class="deleteBtn btn btn-danger btn-sm" data-index="${i}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `);
+        }
+
+        let average = 0;
+
+        if (expenses.length > 0) {
+            average = total / expenses.length;
+        }
+
+        $("#totalExpense").text("₹" + total);
+        $("#avgExpense").text("₹" + average.toFixed(2));
+        $("#highestExpense").text("₹" + highest);
+        $("#thisMonth").text("₹" + monthTotal);
+        $("#totalEntries").text(expenses.length);
+
+    }
+
+    // ================= DELETE =================
+
+    $(document).on("click", ".deleteBtn", function () {
+
+        let index = $(this).data("index");
+
+        // Shift all elements left
+        for (let i = index; i < expenses.length - 1; i++) {
+            expenses[i] = expenses[i + 1];
+        }
+
+        // Remove last duplicate element
+        expenses.length--;
+
+        saveData();
+
+        displayExpenses();
+
+    });
+
+    // ================= EDIT =================
+
+    $(document).on("click", ".editBtn", function () {
+
+        let index = $(this).data("index");
+
+        $("#expenseName").val(expenses[index].name);
+        $("#expenseAmount").val(expenses[index].amount);
+        $("#expenseDate").val(expenses[index].date);
+        $("#expenseCategory").val(expenses[index].category);
+        $("#paymentMethod").val(expenses[index].payment);
+
+        editIndex = index;
+
+        $("button[type='submit']").text("Update Expense");
+
+    });
+
+});
